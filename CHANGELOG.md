@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/amalv/shocket-shift/compare/v1.1.0...v1.2.0) (2026-03-16)
+
+
+### Features
+
+* add storybook design system foundation ([86f2faf](https://github.com/amalv/shocket-shift/commit/86f2fafe58d3645c1d2a590b48839501a93045eb))
+
 # [1.1.0](https://github.com/amalv/shocket-shift/compare/v1.0.1...v1.1.0) (2026-03-16)
 
 
