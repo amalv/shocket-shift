@@ -24,10 +24,10 @@
 - Avoid `any`. If something is genuinely unknown, use `unknown` and narrow it.
 
 ## Functions
-- Prefer `function` declarations for named top-level helpers and exported behavior.
-- Use arrow functions for short callbacks, event handlers, and closures that benefit from lexical scope.
-- Biome enforces `useArrowFunction`, which targets function expressions rather than declarations.
-- That means `const fn = function () {}` should become `const fn = () => {}`, but `function fn() {}` remains a deliberate project choice.
+- Prefer `const` + arrow functions for exported factories, module-level helpers, and local utilities.
+- Use `function` declarations only when hoisting or recursion makes the code clearly better.
+- Biome enforces `useArrowFunction` for function expressions, not declarations, so this broader arrow-first style is a project convention we apply intentionally.
+- Keep returned object APIs simple, and prefer `const render = () => {}` plus `return { render }` over mixing declaration styles inside the same module.
 
 ## State and architecture
 - Keep the puzzle engine pure and deterministic.
@@ -52,4 +52,3 @@
 ## Characters and assets
 - Default to ASCII in source files unless non-ASCII is clearly justified.
 - Prefer procedural effects and lightweight assets in the prototype stage.
-
