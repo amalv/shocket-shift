@@ -14,6 +14,10 @@ export type GoalActivationEffect = {
   point: { x: number; y: number };
 };
 
+export type PlayerCelebrationEffect = {
+  point: { x: number; y: number };
+};
+
 type TileRef = {
   aura: HTMLSpanElement;
   particles: HTMLSpanElement;
@@ -25,6 +29,8 @@ type TileRef = {
 type BoardView = {
   render: (state: GameState, step: StepResult) => void;
 };
+
+type PieceKind = "cell" | "empty" | "player";
 
 const surgeParticleSpecs = [
   { angle: "-90deg", delay: "0ms", distance: "18px" },
@@ -75,6 +81,14 @@ export const createGoalActivationEffects = (step: StepResult): GoalActivationEff
   }));
 };
 
+export const createPlayerCelebrationEffects = (step: StepResult): PlayerCelebrationEffect[] => {
+  if (step.activatedGoals.length === 0) {
+    return [];
+  }
+
+  return [{ point: step.playerDelta?.to ?? step.state.player }];
+};
+
 export const getChargeOrigin = (delta: MovementDelta | null): ChargeOrigin | null => {
   if (!delta) {
     return null;
@@ -115,6 +129,7 @@ const createTileRefs = (board: HTMLDivElement, level: Level): TileRef[][] => {
       trailElement.className = "tile-trail";
       particlesElement.className = "tile-particles";
       pieceElement.className = "piece piece-empty";
+      pieceElement.dataset.kind = "empty";
 
       tileElement.append(auraElement, trailElement, particlesElement, pieceElement);
       board.append(tileElement);
@@ -140,11 +155,11 @@ const applySnapshot = (tileRefs: TileRef[][], snapshot: BoardTileSnapshot[][]): 
       }
 
       tileRef.tile.classList.remove("cell", "charged", "player");
-      tileRef.piece.className = "piece piece-empty";
+      syncPieceKind(tileRef.piece, "empty");
 
       if (tileState.hasCell) {
         tileRef.tile.classList.add("cell");
-        tileRef.piece.className = "piece cell-piece";
+        syncPieceKind(tileRef.piece, "cell");
       }
 
       if (tileState.isCharged) {
@@ -153,7 +168,7 @@ const applySnapshot = (tileRefs: TileRef[][], snapshot: BoardTileSnapshot[][]): 
 
       if (tileState.hasPlayer) {
         tileRef.tile.classList.add("player");
-        tileRef.piece.className = "piece player-piece";
+        syncPieceKind(tileRef.piece, "player");
       }
     });
   });
@@ -201,7 +216,7 @@ const animateStep = (
     }
 
     pulseClass(tileRef.tile, "is-surging", 460);
-    pulseClass(tileRef.tile, "is-powering-on", 760, () => {
+    pulseClass(tileRef.tile, "is-powering-on", 1120, () => {
       delete tileRef.tile.dataset.chargeOrigin;
     });
 
@@ -210,9 +225,74 @@ const animateStep = (
     }
 
     burstParticles(tileRef.particles);
-    pulseClass(tileRef.aura, "is-flaring", 720);
-    pulseClass(tileRef.trail, "is-trailing", 520);
+    pulseClass(tileRef.aura, "is-flaring", 940);
+    pulseClass(tileRef.trail, "is-trailing", 680);
   }
+
+  for (const effect of createPlayerCelebrationEffects(step)) {
+    const playerTile = tileRefs[effect.point.y]?.[effect.point.x]?.tile;
+
+    if (!playerTile) {
+      continue;
+    }
+
+    queuePulseClass(playerTile, "is-celebrating", 920, 560);
+  }
+};
+
+const syncPieceKind = (piece: HTMLSpanElement, kind: PieceKind): void => {
+  if (piece.dataset.kind === kind) {
+    return;
+  }
+
+  piece.dataset.kind = kind;
+  piece.className = kind === "empty" ? "piece piece-empty" : `piece ${kind}-piece`;
+
+  switch (kind) {
+    case "cell":
+      piece.replaceChildren(
+        createCellMeter(),
+        createPiecePart("cell-core"),
+        createPiecePart("cell-cap"),
+      );
+      return;
+    case "player":
+      piece.replaceChildren(createPlayerFace(), createPiecePart("player-thruster"));
+      return;
+    default:
+      piece.replaceChildren();
+  }
+};
+
+const createCellMeter = (): HTMLSpanElement => {
+  const meter = document.createElement("span");
+
+  meter.className = "cell-meter";
+  meter.replaceChildren(
+    ...Array.from({ length: 3 }, () => {
+      const bar = document.createElement("span");
+
+      bar.className = "cell-meter-bar";
+      return bar;
+    }),
+  );
+
+  return meter;
+};
+
+const createPlayerFace = (): HTMLSpanElement => {
+  const face = document.createElement("span");
+
+  face.className = "player-face";
+  face.replaceChildren(createPiecePart("player-eye"), createPiecePart("player-eye"));
+  return face;
+};
+
+const createPiecePart = (className: string): HTMLSpanElement => {
+  const element = document.createElement("span");
+
+  element.className = className;
+  return element;
 };
 
 const burstParticles = (container: HTMLSpanElement): void => {
@@ -254,4 +334,15 @@ const pulseClass = (
     element.classList.remove(className);
     onComplete?.();
   }, duration);
+};
+
+const queuePulseClass = (
+  element: HTMLElement,
+  className: string,
+  duration: number,
+  delay: number,
+): void => {
+  window.setTimeout(() => {
+    pulseClass(element, className, duration);
+  }, delay);
 };
