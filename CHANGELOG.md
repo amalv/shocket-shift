@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/amalv/shocket-shift/compare/v1.0.1...v1.1.0) (2026-03-16)
+
+
+### Features
+
+* add socket charging celebration feedback ([fa7751b](https://github.com/amalv/shocket-shift/commit/fa7751b48df94ff25e3465cc774fe35c101e1616))
+
 ## [1.0.1](https://github.com/amalv/shocket-shift/compare/v1.0.0...v1.0.1) (2026-03-16)
 
 
