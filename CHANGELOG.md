@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/amalv/shocket-shift/compare/v1.0.0...v1.0.1) (2026-03-16)
+
+
+### Bug Fixes
+
+* normalize deployed layout sizing ([0b1cac0](https://github.com/amalv/shocket-shift/commit/0b1cac0c9e910a84f5347735b4d89c481ccff53f))
+
 # 1.0.0 (2026-03-16)
 
 
