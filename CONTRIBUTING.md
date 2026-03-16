@@ -39,10 +39,12 @@ Examples:
 
 ## Quality bar
 - Run `bun run verify` before pushing when your change touches app code or configuration.
+- Run `bun run test:e2e` when you touch browser gameplay flow, Playwright config, or CI.
 - `bun run verify` runs:
   - `bun run lint`
   - `bun run test`
   - `bun run build`
+- Install the Playwright browser once locally with `bun run test:e2e:install`.
 - Pull requests are expected to pass the GitHub Actions CI workflow.
 - If you touch the design-system or Storybook stories, also run `bun run build-storybook`.
 
