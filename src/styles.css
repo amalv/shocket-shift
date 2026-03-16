@@ -184,6 +184,7 @@ h1 {
   place-items: center;
   border-radius: 18px;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .tile.floor,
@@ -214,19 +215,85 @@ h1 {
   background: radial-gradient(circle, rgba(115, 246, 255, 0.22), transparent 72%);
 }
 
+.tile-aura,
+.tile-trail,
+.tile-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tile-aura {
+  z-index: 0;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    rgba(168, 255, 235, 0.45),
+    rgba(115, 246, 255, 0.16) 44%,
+    transparent 74%
+  );
+  filter: blur(3px);
+}
+
+.tile.goal.charged .tile-aura {
+  opacity: 0.52;
+  animation: charged-aura 1.5s ease-in-out infinite;
+}
+
+.tile-trail {
+  z-index: 0;
+  opacity: 0;
+}
+
+.tile-trail::before {
+  content: "";
+  position: absolute;
+  inset: 44%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(115, 246, 255, 0),
+    rgba(168, 255, 235, 0.95),
+    rgba(255, 247, 203, 0)
+  );
+  filter: blur(1px);
+}
+
+.tile-particles {
+  z-index: 1;
+}
+
+.surge-particle {
+  position: absolute;
+  left: calc(50% - 3px);
+  top: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  opacity: 0;
+  background: radial-gradient(circle, #fff9dd 0%, #9effd9 45%, rgba(115, 246, 255, 0) 100%);
+  box-shadow: 0 0 12px rgba(168, 255, 235, 0.7);
+}
+
+.tile-particles.is-active .surge-particle {
+  animation: particle-burst 560ms ease-out forwards;
+  animation-delay: var(--particle-delay);
+}
+
 .piece {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: block;
   transition: transform 150ms ease, filter 150ms ease;
 }
 
 .cell-piece {
-  width: 44%;
-  height: 70%;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ffebbd 0%, #ffb95e 52%, #8c4720 100%);
-  box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 190, 94, 0.22);
+  width: 46%;
+  height: 72%;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fff2ca 0%, #ffd583 16%, #ffb95e 54%, #8c4720 100%);
+  box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 247, 213, 0.28), 0 0
+    20px rgba(255, 190, 94, 0.22);
   transform: rotate(6deg);
   animation: cell-hum 1.8s ease-in-out infinite;
 }
@@ -240,24 +307,26 @@ h1 {
 }
 
 .cell-piece::before {
-  inset: 18% 28%;
+  inset: 16% 28% 22%;
   border-radius: 999px;
   background: linear-gradient(180deg, #fffaf0 0%, #ffe58a 50%, #ffba51 100%);
   box-shadow: 0 0 12px rgba(255, 238, 182, 0.28);
 }
 
 .cell-piece::after {
-  top: -9%;
-  left: 26%;
-  width: 48%;
-  height: 14%;
-  border-radius: 6px 6px 3px 3px;
+  top: 7%;
+  left: 23%;
+  width: 54%;
+  height: 12%;
+  border-radius: 999px;
   background: linear-gradient(180deg, #fff7de 0%, #ffcf77 100%);
+  box-shadow: 0 0 0 1px rgba(140, 71, 32, 0.2);
 }
 
 .charged .cell-piece {
-  background: linear-gradient(180deg, #dffdf8 0%, #8bfff0 52%, #1e7f80 100%);
-  box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.18), 0 0 24px rgba(98, 223, 207, 0.42);
+  background: linear-gradient(180deg, #ebfffb 0%, #b8fff3 18%, #5df3de 54%, #1e7f80 100%);
+  box-shadow: inset 0 -8px 10px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(219, 255, 251, 0.45), 0 0
+    24px rgba(98, 223, 207, 0.42);
 }
 
 .charged .cell-piece::before {
@@ -267,40 +336,50 @@ h1 {
 }
 
 .player-piece {
-  width: 62%;
-  height: 50%;
+  width: 64%;
+  height: 54%;
   border-radius: 18px 18px 24px 24px;
-  background: linear-gradient(180deg, #fff8dc 0%, #ffd59b 45%, #ff8e57 100%);
-  box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.16), 0 0 22px rgba(255, 195, 134, 0.28);
+  background: linear-gradient(180deg, #fff9e2 0%, #ffdba4 26%, #ff9f64 62%, #d76437 100%);
+  box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.16), inset 0 0 0 1px rgba(255, 243, 218, 0.34), 0 0
+    22px rgba(255, 195, 134, 0.28);
   animation: drone-hover 900ms ease-in-out infinite alternate;
 }
 
 .player-piece::before {
-  top: 16%;
-  left: 20%;
-  right: 20%;
-  height: 20%;
+  top: 15%;
+  left: 18%;
+  right: 18%;
+  height: 22%;
   border-radius: 999px;
   background: linear-gradient(90deg, #6ef4ff 0%, #dcfeff 50%, #6ef4ff 100%);
   box-shadow: 0 0 10px rgba(110, 244, 255, 0.45);
 }
 
 .player-piece::after {
-  bottom: -16%;
-  left: 16%;
-  right: 16%;
-  height: 16%;
+  bottom: -18%;
+  left: 14%;
+  right: 14%;
+  height: 20%;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(115, 246, 255, 0.65) 0%, rgba(115, 246, 255, 0) 72%);
+  background: radial-gradient(
+    circle,
+    rgba(115, 246, 255, 0.72) 0%,
+    rgba(115, 246, 255, 0.18) 34%,
+    rgba(115, 246, 255, 0) 78%
+  );
   filter: blur(2px);
 }
 
+.tile.player::before {
+  animation-duration: 9s;
+}
+
 .is-player-step .player-piece {
-  animation: player-step 140ms ease-out;
+  animation: player-step 160ms ease-out;
 }
 
 .is-cell-step .cell-piece {
-  animation: cell-step 170ms ease-out;
+  animation: cell-step 180ms ease-out;
 }
 
 .is-blocked .player-piece {
@@ -308,15 +387,54 @@ h1 {
 }
 
 .is-surging {
-  animation: goal-surge 280ms ease-out;
-}
-
-.is-surging::after {
-  background: radial-gradient(circle, rgba(115, 246, 255, 0.5), transparent 72%);
+  animation: goal-surge 460ms ease-out;
 }
 
 .is-surging .cell-piece::before {
   animation: power-on-core 260ms ease-out;
+}
+
+.is-powering-on .tile-aura,
+.tile-aura.is-flaring {
+  animation: socket-flare 720ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.tile-trail.is-trailing::before {
+  animation: trail-surge 520ms ease-out both;
+}
+
+.tile[data-charge-origin="left"] .tile-trail::before {
+  inset: 45% auto 45% -58%;
+  width: 170%;
+}
+
+.tile[data-charge-origin="right"] .tile-trail::before {
+  inset: 45% -58% 45% auto;
+  width: 170%;
+}
+
+.tile[data-charge-origin="up"] .tile-trail::before {
+  inset: -58% 45% auto 45%;
+  width: 10%;
+  height: 170%;
+  background: linear-gradient(
+    180deg,
+    rgba(115, 246, 255, 0),
+    rgba(168, 255, 235, 0.95),
+    rgba(255, 247, 203, 0)
+  );
+}
+
+.tile[data-charge-origin="down"] .tile-trail::before {
+  inset: auto 45% -58% 45%;
+  width: 10%;
+  height: 170%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 247, 203, 0),
+    rgba(168, 255, 235, 0.95),
+    rgba(115, 246, 255, 0)
+  );
 }
 
 .status {
@@ -368,11 +486,11 @@ h1 {
 
 @keyframes player-step {
   0% {
-    transform: scale(0.94);
+    transform: scale(0.94) translateY(2px);
   }
 
   70% {
-    transform: scale(1.08);
+    transform: scale(1.08) translateY(-1px);
   }
 
   100% {
@@ -419,8 +537,8 @@ h1 {
   }
 
   50% {
-    transform: scale(1.06);
-    box-shadow: inset 0 0 0 2px rgba(158, 255, 217, 0.95), 0 0 30px rgba(115, 246, 255, 0.34);
+    transform: scale(1.08);
+    box-shadow: inset 0 0 0 2px rgba(158, 255, 217, 0.95), 0 0 34px rgba(115, 246, 255, 0.4);
   }
 
   100% {
@@ -451,6 +569,19 @@ h1 {
   }
 }
 
+@keyframes charged-aura {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.42;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.68;
+  }
+}
+
 @keyframes power-on-core {
   0% {
     transform: scaleY(0.5);
@@ -465,6 +596,56 @@ h1 {
   100% {
     transform: scaleY(1);
     filter: brightness(1);
+  }
+}
+
+@keyframes socket-flare {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  35% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes trail-surge {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes particle-burst {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--particle-angle)) translateY(0) scale(0.2);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--particle-angle)) translateY(calc(var(--particle-distance) * -1))
+      scale(1);
   }
 }
 

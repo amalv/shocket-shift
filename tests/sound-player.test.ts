@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createSoundPlan } from "../src/audio/sound-player";
 import type { StepResult } from "../src/game/types";
 
-function createStepResult(overrides: Partial<StepResult>): StepResult {
+const createStepResult = (overrides: Partial<StepResult>): StepResult => {
   return {
     activatedGoals: [],
     event: "move",
@@ -17,7 +17,7 @@ function createStepResult(overrides: Partial<StepResult>): StepResult {
     },
     ...overrides,
   };
-}
+};
 
 describe("createSoundPlan", () => {
   it("creates a compact tone for a normal move", () => {
@@ -35,7 +35,7 @@ describe("createSoundPlan", () => {
     });
   });
 
-  it("adds a charge sequence when a goal is activated", () => {
+  it("adds a layered charge sequence when a socket powers on", () => {
     // Arrange
     const step = createStepResult({
       activatedGoals: [{ x: 3, y: 1 }],
@@ -48,10 +48,11 @@ describe("createSoundPlan", () => {
     // Assert
     expect(plan[0]).toMatchObject({
       kind: "sweep",
-      fromFrequency: 220,
-      toFrequency: 720,
+      fromFrequency: 210,
+      toFrequency: 760,
     });
-    expect(plan.some((action) => action.kind === "tone" && action.frequency === 880)).toBe(true);
+    expect(plan.some((action) => action.kind === "tone" && action.frequency === 1320)).toBe(true);
+    expect(plan).toHaveLength(6);
   });
 
   it("layers a finish flourish for the win event", () => {

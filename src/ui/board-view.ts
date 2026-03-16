@@ -1,4 +1,4 @@
-import type { GameState, Level, StepResult, Tile } from "../game/types";
+import type { GameState, Level, MovementDelta, StepResult, Tile } from "../game/types";
 
 export type BoardTileSnapshot = {
   hasCell: boolean;
@@ -7,32 +7,50 @@ export type BoardTileSnapshot = {
   tile: Tile;
 };
 
+export type ChargeOrigin = "down" | "left" | "right" | "up";
+
+export type GoalActivationEffect = {
+  origin: ChargeOrigin | null;
+  point: { x: number; y: number };
+};
+
 type TileRef = {
+  aura: HTMLSpanElement;
+  particles: HTMLSpanElement;
   piece: HTMLSpanElement;
   tile: HTMLDivElement;
+  trail: HTMLSpanElement;
 };
 
 type BoardView = {
   render: (state: GameState, step: StepResult) => void;
 };
 
-export function createBoardView(board: HTMLDivElement, level: Level): BoardView {
+const surgeParticleSpecs = [
+  { angle: "-90deg", delay: "0ms", distance: "18px" },
+  { angle: "-28deg", delay: "24ms", distance: "16px" },
+  { angle: "22deg", delay: "52ms", distance: "14px" },
+  { angle: "70deg", delay: "86ms", distance: "17px" },
+  { angle: "150deg", delay: "110ms", distance: "13px" },
+] as const;
+
+export const createBoardView = (board: HTMLDivElement, level: Level): BoardView => {
   const tileRefs = createTileRefs(board, level);
   let previousState: GameState | null = null;
 
-  return {
-    render(state, step) {
-      const snapshot = buildBoardSnapshot(level, state);
+  const render = (state: GameState, step: StepResult): void => {
+    const snapshot = buildBoardSnapshot(level, state);
 
-      applySnapshot(tileRefs, snapshot);
-      animateStep(tileRefs, state, step, previousState !== null);
-      board.classList.toggle("is-winning", state.won);
-      previousState = state;
-    },
+    applySnapshot(tileRefs, snapshot);
+    animateStep(tileRefs, state, step, previousState !== null);
+    board.classList.toggle("is-winning", state.won);
+    previousState = state;
   };
-}
 
-export function buildBoardSnapshot(level: Level, state: GameState): BoardTileSnapshot[][] {
+  return { render };
+};
+
+export const buildBoardSnapshot = (level: Level, state: GameState): BoardTileSnapshot[][] => {
   return level.grid.map((row, y) =>
     row.map((tile, x) => {
       const hasCell = state.cells.some((cell) => cell.x === x && cell.y === y);
@@ -46,31 +64,73 @@ export function buildBoardSnapshot(level: Level, state: GameState): BoardTileSna
       };
     }),
   );
-}
+};
 
-function createTileRefs(board: HTMLDivElement, level: Level): TileRef[][] {
+export const createGoalActivationEffects = (step: StepResult): GoalActivationEffect[] => {
+  return step.activatedGoals.map((point) => ({
+    origin: matchesPoint(step.pushedCellDelta?.to, point)
+      ? getChargeOrigin(step.pushedCellDelta)
+      : null,
+    point,
+  }));
+};
+
+export const getChargeOrigin = (delta: MovementDelta | null): ChargeOrigin | null => {
+  if (!delta) {
+    return null;
+  }
+
+  if (delta.to.x > delta.from.x) {
+    return "left";
+  }
+
+  if (delta.to.x < delta.from.x) {
+    return "right";
+  }
+
+  if (delta.to.y > delta.from.y) {
+    return "up";
+  }
+
+  if (delta.to.y < delta.from.y) {
+    return "down";
+  }
+
+  return null;
+};
+
+const createTileRefs = (board: HTMLDivElement, level: Level): TileRef[][] => {
   return level.grid.map((row, y) =>
     row.map((tile, x) => {
       const tileElement = document.createElement("div");
+      const auraElement = document.createElement("span");
+      const trailElement = document.createElement("span");
+      const particlesElement = document.createElement("span");
       const pieceElement = document.createElement("span");
 
       tileElement.className = `tile ${tile}`;
       tileElement.dataset.x = String(x);
       tileElement.dataset.y = String(y);
+      auraElement.className = "tile-aura";
+      trailElement.className = "tile-trail";
+      particlesElement.className = "tile-particles";
       pieceElement.className = "piece piece-empty";
 
-      tileElement.append(pieceElement);
+      tileElement.append(auraElement, trailElement, particlesElement, pieceElement);
       board.append(tileElement);
 
       return {
+        aura: auraElement,
+        particles: particlesElement,
         piece: pieceElement,
         tile: tileElement,
+        trail: trailElement,
       };
     }),
   );
-}
+};
 
-function applySnapshot(tileRefs: TileRef[][], snapshot: BoardTileSnapshot[][]): void {
+const applySnapshot = (tileRefs: TileRef[][], snapshot: BoardTileSnapshot[][]): void => {
   snapshot.forEach((row, y) => {
     row.forEach((tileState, x) => {
       const tileRef = tileRefs[y]?.[x];
@@ -97,14 +157,14 @@ function applySnapshot(tileRefs: TileRef[][], snapshot: BoardTileSnapshot[][]): 
       }
     });
   });
-}
+};
 
-function animateStep(
+const animateStep = (
   tileRefs: TileRef[][],
   nextState: GameState,
   step: StepResult,
   shouldAnimate: boolean,
-): void {
+): void => {
   if (!shouldAnimate) {
     return;
   }
@@ -113,7 +173,7 @@ function animateStep(
     const playerTile = tileRefs[step.playerDelta.to.y]?.[step.playerDelta.to.x]?.tile;
 
     if (playerTile) {
-      pulseClass(playerTile, "is-player-step");
+      pulseClass(playerTile, "is-player-step", 180);
     }
   }
 
@@ -121,7 +181,7 @@ function animateStep(
     const cellTile = tileRefs[step.pushedCellDelta.to.y]?.[step.pushedCellDelta.to.x]?.tile;
 
     if (cellTile) {
-      pulseClass(cellTile, "is-cell-step");
+      pulseClass(cellTile, "is-cell-step", 210);
     }
   }
 
@@ -129,25 +189,69 @@ function animateStep(
     const playerTile = tileRefs[nextState.player.y]?.[nextState.player.x]?.tile;
 
     if (playerTile) {
-      pulseClass(playerTile, "is-blocked");
+      pulseClass(playerTile, "is-blocked", 180);
     }
   }
 
-  for (const goal of step.activatedGoals) {
-    const goalTile = tileRefs[goal.y]?.[goal.x]?.tile;
+  for (const effect of createGoalActivationEffects(step)) {
+    const tileRef = tileRefs[effect.point.y]?.[effect.point.x];
 
-    if (goalTile) {
-      pulseClass(goalTile, "is-surging");
+    if (!tileRef) {
+      continue;
     }
-  }
-}
 
-function pulseClass(element: HTMLDivElement, className: string): void {
+    pulseClass(tileRef.tile, "is-surging", 460);
+    pulseClass(tileRef.tile, "is-powering-on", 760, () => {
+      delete tileRef.tile.dataset.chargeOrigin;
+    });
+
+    if (effect.origin) {
+      tileRef.tile.dataset.chargeOrigin = effect.origin;
+    }
+
+    burstParticles(tileRef.particles);
+    pulseClass(tileRef.aura, "is-flaring", 720);
+    pulseClass(tileRef.trail, "is-trailing", 520);
+  }
+};
+
+const burstParticles = (container: HTMLSpanElement): void => {
+  container.replaceChildren(
+    ...surgeParticleSpecs.map((spec) => {
+      const particle = document.createElement("span");
+
+      particle.className = "surge-particle";
+      particle.style.setProperty("--particle-angle", spec.angle);
+      particle.style.setProperty("--particle-delay", spec.delay);
+      particle.style.setProperty("--particle-distance", spec.distance);
+      return particle;
+    }),
+  );
+
+  pulseClass(container, "is-active", 760, () => {
+    container.replaceChildren();
+  });
+};
+
+const matchesPoint = (
+  first: { x: number; y: number } | null | undefined,
+  second: { x: number; y: number },
+): boolean => {
+  return first?.x === second.x && first.y === second.y;
+};
+
+const pulseClass = (
+  element: HTMLElement,
+  className: string,
+  duration: number,
+  onComplete?: () => void,
+): void => {
   element.classList.remove(className);
   void element.offsetWidth;
   element.classList.add(className);
 
   window.setTimeout(() => {
     element.classList.remove(className);
-  }, 260);
-}
+    onComplete?.();
+  }, duration);
+};

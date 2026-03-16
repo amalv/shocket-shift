@@ -23,32 +23,10 @@ type SoundPlayer = {
   play: (step: StepResult) => void;
 };
 
-export function createSoundPlayer(): SoundPlayer {
+export const createSoundPlayer = (): SoundPlayer => {
   let audioContext: AudioContext | null = null;
 
-  return {
-    play(step) {
-      const context = getAudioContext();
-
-      if (!context) {
-        return;
-      }
-
-      const now = context.currentTime;
-      const soundPlan = createSoundPlan(step);
-
-      for (const action of soundPlan) {
-        if (action.kind === "tone") {
-          playTone(context, now + action.at, action);
-          continue;
-        }
-
-        playSweep(context, now + action.at, action);
-      }
-    },
-  };
-
-  function getAudioContext(): AudioContext | null {
+  const getAudioContext = (): AudioContext | null => {
     if (typeof window === "undefined") {
       return null;
     }
@@ -66,30 +44,68 @@ export function createSoundPlayer(): SoundPlayer {
     }
 
     return audioContext;
-  }
-}
+  };
 
-export function createSoundPlan(step: StepResult): SoundAction[] {
+  const play = (step: StepResult): void => {
+    const context = getAudioContext();
+
+    if (!context) {
+      return;
+    }
+
+    const now = context.currentTime;
+    const soundPlan = createSoundPlan(step);
+
+    for (const action of soundPlan) {
+      if (action.kind === "tone") {
+        playTone(context, now + action.at, action);
+        continue;
+      }
+
+      playSweep(context, now + action.at, action);
+    }
+  };
+
+  return { play };
+};
+
+export const createSoundPlan = (step: StepResult): SoundAction[] => {
   const plan: SoundAction[] = [];
 
   if (step.activatedGoals.length > 0) {
     plan.push(
       {
         at: 0,
-        duration: 0.2,
-        fromFrequency: 220,
-        gain: 0.026,
+        duration: 0.18,
+        fromFrequency: 210,
+        gain: 0.024,
         kind: "sweep",
-        toFrequency: 720,
+        toFrequency: 760,
         type: "sawtooth",
       },
       {
-        at: 0.06,
-        duration: 0.14,
+        at: 0.035,
+        duration: 0.16,
+        frequency: 280,
+        gain: 0.018,
+        kind: "tone",
+        type: "sine",
+      },
+      {
+        at: 0.07,
+        duration: 0.12,
         frequency: 880,
-        gain: 0.02,
+        gain: 0.015,
         kind: "tone",
         type: "triangle",
+      },
+      {
+        at: 0.11,
+        duration: 0.1,
+        frequency: 1320,
+        gain: 0.008,
+        kind: "tone",
+        type: "sine",
       },
     );
   }
@@ -185,13 +201,13 @@ export function createSoundPlan(step: StepResult): SoundAction[] {
   }
 
   return plan;
-}
+};
 
-function playTone(
+const playTone = (
   context: AudioContext,
   startTime: number,
   action: Extract<SoundAction, { kind: "tone" }>,
-): void {
+): void => {
   const oscillator = context.createOscillator();
   const gainNode = context.createGain();
 
@@ -206,13 +222,13 @@ function playTone(
   gainNode.connect(context.destination);
   oscillator.start(startTime);
   oscillator.stop(startTime + action.duration);
-}
+};
 
-function playSweep(
+const playSweep = (
   context: AudioContext,
   startTime: number,
   action: Extract<SoundAction, { kind: "sweep" }>,
-): void {
+): void => {
   const oscillator = context.createOscillator();
   const gainNode = context.createGain();
 
@@ -231,4 +247,4 @@ function playSweep(
   gainNode.connect(context.destination);
   oscillator.start(startTime);
   oscillator.stop(startTime + action.duration);
-}
+};
