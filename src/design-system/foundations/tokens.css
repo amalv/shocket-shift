@@ -1,0 +1,23 @@
+:root {
+  color-scheme: dark;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 16px;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  --bg-0: #08111d;
+  --bg-1: #0f1d30;
+  --bg-2: #16273d;
+  --panel: rgba(9, 15, 26, 0.76);
+  --panel-border: rgba(255, 255, 255, 0.09);
+  --text: #f5efe0;
+  --muted: #9bb2c7;
+  --accent-warm: #ffb95e;
+  --accent-hot: #ff7d48;
+  --accent-cool: #73f6ff;
+  --accent-win: #9effd9;
+  --floor: #13243b;
+  --wall: #372923;
+  --radius-panel: 28px;
+  --radius-card: 18px;
+  --shadow-panel: 0 28px 80px rgba(0, 0, 0, 0.35);
+}
