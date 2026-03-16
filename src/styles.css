@@ -1,6 +1,9 @@
 :root {
   color-scheme: dark;
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 16px;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
   --bg-0: #08111d;
   --bg-1: #0f1d30;
   --bg-2: #16273d;
@@ -49,15 +52,18 @@ button {
 }
 
 #app {
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .shell {
-  min-height: 100vh;
+  width: min(100%, 1100px);
+  min-height: 100dvh;
   display: grid;
   gap: 1.5rem;
-  align-items: center;
-  padding: 2rem;
+  align-items: start;
+  align-content: start;
+  margin: 0 auto;
+  padding: clamp(16px, 2vw, 32px);
 }
 
 .panel {
@@ -70,7 +76,7 @@ button {
 }
 
 .intro {
-  padding: 2rem;
+  padding: clamp(22px, 2vw, 32px);
 }
 
 .eyebrow,
@@ -78,13 +84,13 @@ button {
 .hint {
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  font-size: 0.72rem;
+  font-size: 11.5px;
   color: var(--muted);
 }
 
 h1 {
   margin: 0.35rem 0 0.75rem;
-  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-size: clamp(38px, 3.6vw, 70px);
   line-height: 0.9;
   letter-spacing: 0.04em;
 }
@@ -93,7 +99,7 @@ h1 {
   max-width: 34rem;
   margin: 0;
   color: #d6e0eb;
-  font-size: 1.04rem;
+  font-size: clamp(16px, 0.95rem + 0.18vw, 17px);
   line-height: 1.65;
 }
 
@@ -105,8 +111,8 @@ h1 {
 }
 
 .stats div {
-  min-width: 8rem;
-  padding: 1rem 1.1rem;
+  min-width: 128px;
+  padding: 16px 18px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.055);
 }
@@ -114,13 +120,13 @@ h1 {
 .stats strong {
   display: block;
   margin-top: 0.25rem;
-  font-size: 1.9rem;
+  font-size: 30px;
   color: #fff3c4;
 }
 
 .actions {
   display: flex;
-  gap: 0.9rem;
+  gap: 14px;
   flex-wrap: wrap;
   align-items: center;
   margin-top: 1.5rem;
@@ -129,7 +135,7 @@ h1 {
 .actions button {
   border: 0;
   border-radius: 999px;
-  padding: 0.9rem 1.25rem;
+  padding: 14px 20px;
   cursor: pointer;
   font-weight: 700;
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
@@ -159,13 +165,15 @@ h1 {
 }
 
 .board-panel {
-  padding: 1.25rem;
+  padding: clamp(14px, 1.2vw, 20px);
 }
 
 .board {
+  width: min(100%, 672px);
+  margin: 0 auto;
   display: grid;
-  gap: 0.32rem;
-  padding: 1rem;
+  gap: clamp(3px, 0.3vw, 5px);
+  padding: clamp(11px, 1vw, 16px);
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
     rgba(255, 255, 255, 0.02);
@@ -438,8 +446,8 @@ h1 {
 }
 
 .status {
-  margin-top: 1rem;
-  padding: 1rem 1.1rem;
+  margin-top: 16px;
+  padding: 16px 18px;
   border-radius: 18px;
   color: #c8d5e1;
   background: rgba(255, 255, 255, 0.055);
@@ -649,9 +657,26 @@ h1 {
   }
 }
 
+@media (max-width: 899px) {
+  .shell {
+    max-width: 608px;
+  }
+}
+
 @media (min-width: 900px) {
   .shell {
-    grid-template-columns: minmax(18rem, 26rem) minmax(24rem, 42rem);
+    grid-template-columns: minmax(288px, 384px) minmax(320px, 672px);
     justify-content: center;
+  }
+
+  .board {
+    width: min(100%, 672px, calc(100dvh - 170px));
+  }
+}
+
+@media (min-width: 900px) and (min-height: 920px) {
+  .shell {
+    align-items: center;
+    align-content: center;
   }
 }
