@@ -13,3 +13,5 @@ Thumbs.db
 .copilot-local.md
 .github/copilot-instructions.md
 .github/copilot-instructions.local.md
+
+.vercel/

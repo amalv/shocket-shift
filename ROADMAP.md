@@ -1,4 +1,4 @@
-﻿# Roadmap
+# Roadmap
 
 This roadmap keeps Socket Shift moving from a tight prototype to a production-ready web game without losing the clarity of the codebase.
 
@@ -19,29 +19,30 @@ Delivered:
 - Biome, commitlint, lefthook, and semantic-release setup
 
 ## 🟡 Milestone 02: Repository Foundation
-Status: in progress
+Status: complete
 
 Goals:
 - Add a polished README that explains the game and the engineering approach
 - Add a roadmap that makes the production path legible
 - Make the repository look intentional to contributors and reviewers
 
-Deliverables:
+Delivered:
 - `README.md`
 - `ROADMAP.md`
 - Better public-facing project positioning
 
 ## 🟠 Milestone 03: Production Pipeline
-Status: planned
+Status: complete
 
 Goals:
 - Add pull request CI for `lint`, `test`, and `build`
 - Add preview and production deployment
 - Make release automation part of the normal branch-to-main flow
 
-Deliverables:
+Delivered:
 - GitHub Actions workflow for validation
-- Hosting setup for preview and production deployments
+- Vercel configuration for preview and production deployments
+- Shared `bun run verify` command for local and CI validation
 - Semantic-release flow verified on `main`
 
 ## 🔵 Milestone 04: Core Game Growth

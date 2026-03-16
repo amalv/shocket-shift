@@ -15,7 +15,8 @@
     "commitlint": "commitlint --edit",
     "prepare": "lefthook install",
     "release": "semantic-release",
-    "release:dry-run": "semantic-release --dry-run"
+    "release:dry-run": "semantic-release --dry-run",
+    "verify": "bun run lint && bun run test && bun run build"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

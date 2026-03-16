@@ -38,9 +38,17 @@ Examples:
 - `docs: add branch and commit conventions`
 
 ## Quality bar
-- Run `bun run lint`
-- Run `bun run test`
-- Run `bun run build`
+- Run `bun run verify` before pushing when your change touches app code or configuration.
+- `bun run verify` runs:
+  - `bun run lint`
+  - `bun run test`
+  - `bun run build`
+- Pull requests are expected to pass the GitHub Actions CI workflow.
+
+## Deployment
+- Vercel is the primary hosting target for preview and production deployments.
+- The deployment configuration lives in `vercel.json`.
+- See `docs/deployment.md` for import and environment details.
 
 ## Releases
 - Releases are generated from Conventional Commits using semantic-release.
