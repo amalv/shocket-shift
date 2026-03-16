@@ -1,5 +1,11 @@
 # Contributing
 
+## Workflow
+- Track work through GitHub issues.
+- Create one focused branch per issue.
+- Open a pull request linked to the issue with `Closes #<issue-number>` when applicable.
+- Keep pull requests small enough to review comfortably.
+
 ## Branch naming
 - Use `feat/<short-name>` for features.
 - Use `fix/<short-name>` for bug fixes.
@@ -35,3 +41,8 @@ Examples:
 - Run `bun run lint`
 - Run `bun run test`
 - Run `bun run build`
+
+## Releases
+- Releases are generated from Conventional Commits using semantic-release.
+- `feat` produces a minor release, `fix` produces a patch release, and breaking changes produce a major release.
+- The generated changelog is written to `CHANGELOG.md`.

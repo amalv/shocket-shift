@@ -1,7 +1,7 @@
 # Socket Shift Copilot Instructions
 
 ## Project intent
-- This is a small puzzle game prototype written in TypeScript and built with Vite.
+- This is a small original puzzle game prototype written in TypeScript and built with Vite.
 - The project should stay lightweight and scalable: prefer plain TypeScript modules over framework-heavy abstractions unless the UI complexity clearly justifies a framework.
 
 ## Architecture rules
@@ -22,6 +22,8 @@
 - Treat the game feel as part of the product, not as optional polish layered on at the end.
 
 ## Workflow rules
+- Track work through GitHub issues and prefer one focused pull request per issue.
+- PRs should link the relevant issue with `Closes #<issue-number>` when applicable.
 - Use Conventional Commit style for commit messages.
 - Prefer commit types such as `feat`, `fix`, `docs`, `refactor`, `test`, `style`, and `chore`.
 - Use branch names like `feat/<short-name>`, `fix/<short-name>`, `docs/<short-name>`, `chore/<short-name>`, or `refactor/<short-name>`.
