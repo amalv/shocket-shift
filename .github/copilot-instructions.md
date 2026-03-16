@@ -19,6 +19,14 @@
 - Preserve the existing `Socket Shift` visual direction: industrial, electric, compact, and readable.
 - Add motion intentionally. Prefer meaningful feedback such as move pulses, goal charge effects, and win emphasis over decorative noise.
 - Keep sound effects lightweight and procedural when possible.
+- Treat the game feel as part of the product, not as optional polish layered on at the end.
+
+## Workflow rules
+- Use Conventional Commit style for commit messages.
+- Prefer commit types such as `feat`, `fix`, `docs`, `refactor`, `test`, `style`, and `chore`.
+- Use branch names like `feat/<short-name>`, `fix/<short-name>`, `docs/<short-name>`, `chore/<short-name>`, or `refactor/<short-name>`.
+- Keep branch names short, lowercase, and hyphenated.
+- Keep commits focused so the history stays useful for semantic-release later.
 
 ## Coding style
 - Use strict TypeScript.
@@ -26,3 +34,4 @@
 - Default to ASCII in source files unless there is a strong reason not to.
 - Do not add React unless stateful UI complexity genuinely demands it.
 - Follow the project conventions in `docs/code-guidelines.md`, especially the `function` declarations vs arrow function rule.
+- Biome enforces `useArrowFunction` for function expressions; keep declarations and expressions consistent with that rule.
