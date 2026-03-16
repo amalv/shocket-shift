@@ -1,12 +1,13 @@
-﻿# Socket Shift
+# Socket Shift
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev/)
 [![Bun](https://img.shields.io/badge/Bun-282A36?style=flat-square&logo=bun&logoColor=white)](https://bun.sh/)
 [![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Biome](https://img.shields.io/badge/Biome-60A5FA?style=flat-square)](https://biomejs.dev/)
+[![CI](https://github.com/amalv/shocket-shift/actions/workflows/ci.yml/badge.svg)](https://github.com/amalv/shocket-shift/actions/workflows/ci.yml)
+[![Release](https://github.com/amalv/shocket-shift/actions/workflows/release.yml/badge.svg)](https://github.com/amalv/shocket-shift/actions/workflows/release.yml)
 [![Semantic Release](https://img.shields.io/badge/Semantic_Release-494949?style=flat-square&logo=semanticrelease&logoColor=white)](https://semantic-release.gitbook.io/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 
 Socket Shift is an original TypeScript puzzle game about guiding a maintenance drone and routing power cells into live sockets. It is intentionally small right now: one handcrafted level, sharp game feel, and a repo set up to scale cleanly instead of collapsing into prototype chaos.
 
@@ -21,6 +22,7 @@ Socket Shift is an original TypeScript puzzle game about guiding a maintenance d
 - Conventional commits, commitlint, and lefthook quality gates
 - Semantic-release configuration with changelog generation
 - Issue and pull request templates for a clean GitHub workflow
+- GitHub Actions CI and Vercel-ready deployment configuration
 
 ## 🧭 Project Milestones
 ### Milestone 01: Playable Prototype
@@ -75,10 +77,12 @@ This repository is meant to showcase both the game and the way it is built.
 - `semantic-release` is configured to generate releases and update `CHANGELOG.md`
 - Work is tracked through issues, focused branches, and linked pull requests
 - The code style leans arrow-first for module helpers and exported factories
+- GitHub Actions validates pull requests with the same verify command used locally
 
 Useful docs:
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [docs/code-guidelines.md](./docs/code-guidelines.md)
+- [docs/deployment.md](./docs/deployment.md)
 - [CHANGELOG.md](./CHANGELOG.md)
 
 ## 🚀 Quick Start
@@ -94,10 +98,19 @@ bun run dev
 
 ### Quality checks
 ```bash
-bun run lint
-bun run test
-bun run build
+bun run verify
 ```
+
+## ☁️ Deployment
+Vercel is the primary hosting target.
+
+The repository includes:
+- GitHub Actions CI for `lint`, `test`, and `build`
+- `vercel.json` with explicit Vite + Bun deployment settings
+- automatic Vercel preview deployments through GitHub integration
+- deployment notes in [docs/deployment.md](./docs/deployment.md)
+
+Preview and production deployments are handled through Vercel's GitHub integration. The remaining setup is project import and any future custom domain configuration.
 
 ## 🧪 Current Toolchain
 - TypeScript
@@ -105,6 +118,8 @@ bun run build
 - Bun
 - Vitest
 - Biome
+- GitHub Actions
+- Vercel
 - commitlint
 - lefthook
 - semantic-release
