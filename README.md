@@ -73,12 +73,13 @@ This repository is meant to showcase both the game and the way it is built.
 
 - `Biome` owns formatting and linting
 - `Vitest` covers the most important puzzle and presentation helpers
+- `Playwright` covers the shipped browser game flow end to end
 - `lefthook` runs checks before commits
 - `commitlint` enforces Conventional Commits
 - `semantic-release` is configured to generate releases and update `CHANGELOG.md`
 - Work is tracked through issues, focused branches, and linked pull requests
 - The code style leans arrow-first for module helpers and exported factories
-- GitHub Actions validates pull requests with the same verify command used locally
+- GitHub Actions validates pull requests with `bun run verify` plus Playwright e2e coverage
 
 Useful docs:
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
@@ -101,7 +102,14 @@ bun run dev
 ### Quality checks
 ```bash
 bun run verify
+bun run test:e2e
 bun run build-storybook
+```
+
+Install the Playwright browser once before the first e2e run:
+
+```bash
+bun run test:e2e:install
 ```
 
 ## ☁️ Deployment
@@ -109,6 +117,7 @@ Vercel is the primary hosting target.
 
 The repository includes:
 - GitHub Actions CI for `lint`, `test`, and `build`
+- Playwright browser installation and e2e coverage in GitHub Actions
 - `vercel.json` with explicit Vite + Bun deployment settings
 - automatic Vercel preview deployments through GitHub integration
 - deployment notes in [docs/deployment.md](./docs/deployment.md)
@@ -120,6 +129,7 @@ Preview and production deployments are handled through Vercel's GitHub integrati
 - Vite
 - Bun
 - Vitest
+- Playwright
 - Biome
 - GitHub Actions
 - Vercel

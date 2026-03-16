@@ -35,5 +35,5 @@ No runtime environment variables are required at the moment.
 
 ## Notes
 - The app is currently a single-page static game at the root path, so no custom rewrite rules are needed.
-- GitHub Actions validates `lint`, `test`, and `build` before changes land on `main`.
+- GitHub Actions validates `lint`, `test`, `build`, and Playwright e2e coverage before changes land on `main`.
 - Semantic-release remains responsible for versioning and changelog generation on the GitHub side.
