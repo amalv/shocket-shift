@@ -74,4 +74,23 @@ describe("createSoundPlan", () => {
     });
     expect(plan).toHaveLength(4);
   });
+
+  it("uses a short descending cue for undo", () => {
+    // Arrange
+    const step = createStepResult({ event: "undo" });
+
+    // Act
+    const plan = createSoundPlan(step);
+
+    // Assert
+    expect(plan).toHaveLength(2);
+    expect(plan[0]).toMatchObject({
+      kind: "tone",
+      frequency: 280,
+    });
+    expect(plan[1]).toMatchObject({
+      kind: "tone",
+      frequency: 220,
+    });
+  });
 });

@@ -14,6 +14,7 @@ const meta = {
   },
   args: {
     boardColumns: 9,
+    canUndo: false,
     levelName: "Prototype 01",
     moves: "0",
     socketCount: "2",
@@ -40,6 +41,7 @@ export const Default: Story = {};
 
 export const WonState: Story = {
   args: {
+    canUndo: true,
     moves: "24",
     soundEnabled: false,
     statusMessage: "Grid stable. All sockets are powered.",
