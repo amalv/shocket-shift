@@ -4,6 +4,7 @@ import { prototypeLevel } from "../src/game/levels";
 import {
   buildBoardSnapshot,
   createGoalActivationEffects,
+  createPlayerCelebrationEffects,
   getChargeOrigin,
 } from "../src/ui/board-view";
 
@@ -88,5 +89,35 @@ describe("createGoalActivationEffects", () => {
         point: { x: 3, y: 1 },
       },
     ]);
+  });
+});
+
+describe("createPlayerCelebrationEffects", () => {
+  it("celebrates at the drone's current tile when a socket powers on", () => {
+    // Arrange
+    const step = {
+      activatedGoals: [{ x: 5, y: 7 }],
+      event: "push",
+      playerDelta: {
+        from: { x: 4, y: 5 },
+        to: { x: 4, y: 4 },
+      },
+      pushedCellDelta: {
+        from: { x: 4, y: 4 },
+        to: { x: 5, y: 4 },
+      },
+      state: {
+        cells: [{ x: 5, y: 7 }],
+        moves: 6,
+        player: { x: 4, y: 4 },
+        won: false,
+      },
+    } as const;
+
+    // Act
+    const effects = createPlayerCelebrationEffects(step);
+
+    // Assert
+    expect(effects).toEqual([{ point: { x: 4, y: 4 } }]);
   });
 });

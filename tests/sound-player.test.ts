@@ -35,7 +35,7 @@ describe("createSoundPlan", () => {
     });
   });
 
-  it("adds a layered charge sequence when a socket powers on", () => {
+  it("builds a progressive charge-up and happy finish when a socket powers on", () => {
     // Arrange
     const step = createStepResult({
       activatedGoals: [{ x: 3, y: 1 }],
@@ -48,11 +48,15 @@ describe("createSoundPlan", () => {
     // Assert
     expect(plan[0]).toMatchObject({
       kind: "sweep",
-      fromFrequency: 210,
-      toFrequency: 760,
+      fromFrequency: 220,
+      toFrequency: 520,
     });
-    expect(plan.some((action) => action.kind === "tone" && action.frequency === 1320)).toBe(true);
-    expect(plan).toHaveLength(6);
+    expect(plan.some((action) => action.kind === "tone" && action.frequency === 420)).toBe(true);
+    expect(plan.some((action) => action.kind === "tone" && action.frequency === 560)).toBe(true);
+    expect(plan.some((action) => action.kind === "tone" && action.frequency === 720)).toBe(true);
+    expect(plan.some((action) => action.kind === "tone" && action.frequency === 1040)).toBe(true);
+    expect(plan.some((action) => action.kind === "tone" && action.frequency === 1480)).toBe(true);
+    expect(plan).toHaveLength(8);
   });
 
   it("layers a finish flourish for the win event", () => {
