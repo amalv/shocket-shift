@@ -44,6 +44,7 @@ Examples:
   - `bun run test`
   - `bun run build`
 - Pull requests are expected to pass the GitHub Actions CI workflow.
+- If you touch the design-system or Storybook stories, also run `bun run build-storybook`.
 
 ## Deployment
 - Vercel is the primary hosting target for preview and production deployments.

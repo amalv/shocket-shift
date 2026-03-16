@@ -23,6 +23,7 @@ Socket Shift is an original TypeScript puzzle game about guiding a maintenance d
 - Semantic-release configuration with changelog generation
 - Issue and pull request templates for a clean GitHub workflow
 - GitHub Actions CI and Vercel-ready deployment configuration
+- Storybook-backed design-system foundation for current shell components
 
 ## 🧭 Project Milestones
 ### Milestone 01: Playable Prototype
@@ -83,6 +84,7 @@ Useful docs:
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [docs/code-guidelines.md](./docs/code-guidelines.md)
 - [docs/deployment.md](./docs/deployment.md)
+- [docs/design-system.md](./docs/design-system.md)
 - [CHANGELOG.md](./CHANGELOG.md)
 
 ## 🚀 Quick Start
@@ -99,6 +101,7 @@ bun run dev
 ### Quality checks
 ```bash
 bun run verify
+bun run build-storybook
 ```
 
 ## ☁️ Deployment
@@ -120,6 +123,7 @@ Preview and production deployments are handled through Vercel's GitHub integrati
 - Biome
 - GitHub Actions
 - Vercel
+- Storybook
 - commitlint
 - lefthook
 - semantic-release

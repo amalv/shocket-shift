@@ -1,3 +1,4 @@
+import { createGameShellMarkup } from "../design-system/layouts/game-shell";
 import type { GameState, Level, StepResult } from "../game/types";
 import { createBoardView } from "./board-view";
 
@@ -20,7 +21,14 @@ type AppRenderer = {
 };
 
 export function createAppRenderer(options: RendererOptions): AppRenderer {
-  options.root.innerHTML = createShellMarkup(options.level);
+  options.root.innerHTML = createGameShellMarkup({
+    boardColumns: options.level.width,
+    levelName: options.level.name,
+    moves: "0",
+    socketCount: String(options.level.goals.length),
+    soundEnabled: true,
+    statusMessage: "",
+  });
 
   const board = options.root.querySelector<HTMLDivElement>("[data-board]");
   const moves = options.root.querySelector<HTMLElement>("[data-moves]");
@@ -42,48 +50,10 @@ export function createAppRenderer(options: RendererOptions): AppRenderer {
       moves.textContent = String(model.state.moves);
       status.textContent = model.statusMessage;
       status.classList.toggle("won", model.state.won);
+      status.classList.toggle("status-banner--won", model.state.won);
       soundButton.textContent = model.soundEnabled ? "Sound on" : "Sound off";
       soundButton.setAttribute("aria-pressed", String(model.soundEnabled));
       boardView.render(model.state, model.lastStep);
     },
   };
-}
-
-function createShellMarkup(level: Level): string {
-  return `
-    <main class="shell">
-      <section class="panel intro">
-        <p class="eyebrow">${level.name}</p>
-        <h1>Socket Shift</h1>
-        <p class="lede">
-          Guide the maintenance drone and push every power cell into a live socket.
-        </p>
-        <div class="stats">
-          <div>
-            <span class="label">Moves</span>
-            <strong data-moves>0</strong>
-          </div>
-          <div>
-            <span class="label">Sockets</span>
-            <strong>${level.goals.length}</strong>
-          </div>
-        </div>
-        <div class="actions">
-          <button type="button" data-reset>Reset level</button>
-          <button type="button" class="ghost-button" data-sound>Sound on</button>
-        </div>
-        <p class="hint">Move with arrow keys or WASD. Reset with R.</p>
-      </section>
-      <section class="panel board-panel">
-        <div
-          class="board"
-          data-board
-          style="grid-template-columns: repeat(${level.width}, minmax(0, 1fr));"
-          role="img"
-          aria-label="Puzzle grid with walls, sockets, power cells, and the player"
-        ></div>
-        <div class="status" data-status></div>
-      </section>
-    </main>
-  `;
 }

@@ -51,12 +51,14 @@ Status: planned
 Goals:
 - Add undo and move history
 - Add more levels and simple progression
+- Establish the first Storybook-backed design-system layer
 - Improve win/reset flow and in-game status feedback
 
 Deliverables:
 - Undo support
 - Level registry and progression system
 - Better state transitions around reset and completion
+- Documented shell components and design tokens
 
 ## 🟣 Milestone 05: Delight and Accessibility
 Status: planned
