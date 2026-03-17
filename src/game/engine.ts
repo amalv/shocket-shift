@@ -134,6 +134,8 @@ export function getMessageForEvent(eventName: GameEvent, level: Level): string {
       return "Cell shifted. The grid is stabilizing.";
     case "reset":
       return "Level reset. Systems ready.";
+    case "undo":
+      return "Move rewound. Re-route the grid.";
     case "win":
       return "Grid stable. All sockets are powered.";
     default:

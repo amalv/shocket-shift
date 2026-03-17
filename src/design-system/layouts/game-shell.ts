@@ -7,6 +7,7 @@ import { escapeHtml } from "../shared/escape-html";
 export type GameShellMarkupOptions = {
   boardAriaLabel?: string;
   boardColumns: number;
+  canUndo: boolean;
   levelName: string;
   moves: string;
   socketCount: string;
@@ -18,6 +19,7 @@ export type GameShellMarkupOptions = {
 export const createGameShellMarkup = ({
   boardAriaLabel = "Puzzle grid with walls, sockets, power cells, and the player",
   boardColumns,
+  canUndo,
   levelName,
   moves,
   socketCount,
@@ -40,13 +42,19 @@ export const createGameShellMarkup = ({
         <div class="actions">
           ${createControlButtonMarkup({ label: "Reset level", dataAttribute: "data-reset" })}
           ${createControlButtonMarkup({
+            disabled: !canUndo,
+            label: "Undo move",
+            tone: "ghost",
+            dataAttribute: "data-undo",
+          })}
+          ${createControlButtonMarkup({
             ariaPressed: soundEnabled,
             label: soundEnabled ? "Sound on" : "Sound off",
             tone: "ghost",
             dataAttribute: "data-sound",
           })}
         </div>
-        <p class="hint">Move with arrow keys or WASD. Reset with R.</p>
+        <p class="hint">Move with arrow keys or WASD. Undo with Z. Reset with R.</p>
       </section>
       <section class="panel board-panel">
         ${createBoardSurfaceMarkup({

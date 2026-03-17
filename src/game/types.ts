@@ -29,7 +29,7 @@ export type Level = {
   startingCells: Point[];
 };
 
-export type GameEvent = "blocked" | "move" | "push" | "reset" | "win";
+export type GameEvent = "blocked" | "move" | "push" | "reset" | "undo" | "win";
 
 export type StepResult = {
   activatedGoals: Point[];

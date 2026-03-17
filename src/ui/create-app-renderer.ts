@@ -4,12 +4,14 @@ import { createBoardView } from "./board-view";
 
 type RendererOptions = {
   level: Level;
+  onUndo: () => void;
   onReset: () => void;
   onToggleSound: () => void;
   root: HTMLDivElement;
 };
 
 type RenderModel = {
+  canUndo: boolean;
   lastStep: StepResult;
   soundEnabled: boolean;
   state: GameState;
@@ -23,6 +25,7 @@ type AppRenderer = {
 export function createAppRenderer(options: RendererOptions): AppRenderer {
   options.root.innerHTML = createGameShellMarkup({
     boardColumns: options.level.width,
+    canUndo: false,
     levelName: options.level.name,
     moves: "0",
     socketCount: String(options.level.goals.length),
@@ -34,15 +37,17 @@ export function createAppRenderer(options: RendererOptions): AppRenderer {
   const moves = options.root.querySelector<HTMLElement>("[data-moves]");
   const status = options.root.querySelector<HTMLDivElement>("[data-status]");
   const resetButton = options.root.querySelector<HTMLButtonElement>("[data-reset]");
+  const undoButton = options.root.querySelector<HTMLButtonElement>("[data-undo]");
   const soundButton = options.root.querySelector<HTMLButtonElement>("[data-sound]");
 
-  if (!board || !moves || !status || !resetButton || !soundButton) {
+  if (!board || !moves || !status || !resetButton || !undoButton || !soundButton) {
     throw new Error("Renderer setup failed");
   }
 
   const boardView = createBoardView(board, options.level);
 
   resetButton.addEventListener("click", options.onReset);
+  undoButton.addEventListener("click", options.onUndo);
   soundButton.addEventListener("click", options.onToggleSound);
 
   return {
@@ -51,6 +56,7 @@ export function createAppRenderer(options: RendererOptions): AppRenderer {
       status.textContent = model.statusMessage;
       status.classList.toggle("won", model.state.won);
       status.classList.toggle("status-banner--won", model.state.won);
+      undoButton.disabled = !model.canUndo;
       soundButton.textContent = model.soundEnabled ? "Sound on" : "Sound off";
       soundButton.setAttribute("aria-pressed", String(model.soundEnabled));
       boardView.render(model.state, model.lastStep);

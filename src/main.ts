@@ -1,15 +1,17 @@
 import "./styles.css";
 
-import { createSoundPlayer } from "./audio/sound-player";
 import {
-  createInitialState,
-  getDirectionFromKey,
-  getMessageForEvent,
-  resetGame,
-  stepGame,
-} from "./game/engine";
+  type AppModel,
+  applyDirectionToModel,
+  canUndo,
+  createInitialModel,
+  resetModel,
+  toggleSoundInModel,
+  undoModel,
+} from "./app-model";
+import { createSoundPlayer } from "./audio/sound-player";
+import { getDirectionFromKey } from "./game/engine";
 import { prototypeLevel } from "./game/levels";
-import type { GameEvent, GameState, StepResult } from "./game/types";
 import { createAppRenderer } from "./ui/create-app-renderer";
 
 const appRoot = document.querySelector<HTMLDivElement>("#app");
@@ -18,19 +20,13 @@ if (!appRoot) {
   throw new Error("App root not found");
 }
 
-type AppModel = {
-  lastStep: StepResult;
-  soundEnabled: boolean;
-  state: GameState;
-  statusMessage: string;
-};
-
 const level = prototypeLevel;
 const soundPlayer = createSoundPlayer();
-let model: AppModel = createInitialModel();
+let model: AppModel = createInitialModel(level);
 const renderer = createAppRenderer({
   level,
   root: appRoot,
+  onUndo: handleUndo,
   onReset: handleReset,
   onToggleSound: handleToggleSound,
 });
@@ -41,79 +37,60 @@ window.addEventListener("keydown", handleKeydown);
 function handleKeydown(event: KeyboardEvent): void {
   const direction = getDirectionFromKey(event.key);
 
-  if (!direction) {
-    if (event.key.toLowerCase() === "r") {
-      handleReset();
-    }
-
+  if (direction) {
+    event.preventDefault();
+    model = applyDirectionToModel(level, model, direction);
+    playSound(model);
+    renderApp(model);
     return;
   }
 
-  event.preventDefault();
+  switch (event.key.toLowerCase()) {
+    case "r":
+      event.preventDefault();
+      handleReset();
+      return;
+    case "z":
+      if (!canUndo(model)) {
+        return;
+      }
 
-  const result = stepGame(level, model.state, direction);
-  playSound(result, model.soundEnabled);
-  model = applyStep(model, result);
-  renderApp(model);
+      event.preventDefault();
+      handleUndo();
+      return;
+    default:
+      return;
+  }
 }
 
 function handleReset(): void {
-  const nextState = resetGame(level);
-  const resetStep = createStepResult("reset", nextState);
+  model = resetModel(level, model);
+  playSound(model);
+  renderApp(model);
+}
 
-  playSound(resetStep, model.soundEnabled);
-  model = applyStep(model, resetStep);
+function handleUndo(): void {
+  model = undoModel(level, model);
+  playSound(model);
   renderApp(model);
 }
 
 function handleToggleSound(): void {
-  model = {
-    ...model,
-    soundEnabled: !model.soundEnabled,
-  };
+  model = toggleSoundInModel(model);
   renderApp(model);
 }
 
-function createInitialModel(): AppModel {
-  const state = createInitialState(level);
-
-  return {
-    lastStep: createStepResult("reset", state),
-    soundEnabled: true,
-    state,
-    statusMessage: getMessageForEvent("reset", level),
-  };
-}
-
-function applyStep(currentModel: AppModel, step: StepResult): AppModel {
-  return {
-    ...currentModel,
-    lastStep: step,
-    state: step.state,
-    statusMessage: getMessageForEvent(step.event, level),
-  };
-}
-
-function createStepResult(event: GameEvent, state: GameState): StepResult {
-  return {
-    activatedGoals: [],
-    event,
-    playerDelta: null,
-    pushedCellDelta: null,
-    state,
-  };
-}
-
-function playSound(step: StepResult, soundEnabled: boolean): void {
-  if (!soundEnabled) {
+function playSound(nextModel: AppModel): void {
+  if (!nextModel.soundEnabled) {
     return;
   }
 
-  soundPlayer.play(step);
+  soundPlayer.play(nextModel.lastStep);
 }
 
 function renderApp(nextModel: AppModel): void {
   renderer.render({
+    canUndo: canUndo(nextModel),
     lastStep: nextModel.lastStep,
     soundEnabled: nextModel.soundEnabled,
     state: nextModel.state,

@@ -15,6 +15,7 @@ Socket Shift is an original TypeScript puzzle game about guiding a maintenance d
 - A playable browser prototype built with TypeScript and Vite
 - A pure puzzle engine separated from DOM rendering and audio adapters
 - One handcrafted level focused on readable movement and satisfying interactions
+- Undo support for quick move-by-move puzzle recovery
 - Procedural sound effects with layered charge-up feedback
 - Microinteractions for movement, pushes, socket surges, and power-on effects
 - Unit tests with Vitest using Arrange / Act / Assert structure

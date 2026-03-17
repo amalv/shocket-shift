@@ -9,6 +9,7 @@ describe("createControlButtonMarkup", () => {
     // Arrange
     const options = {
       ariaPressed: true,
+      disabled: true,
       label: "Sound on",
       tone: "ghost",
     } as const;
@@ -19,6 +20,7 @@ describe("createControlButtonMarkup", () => {
     // Assert
     expect(markup).toContain('class="control-button control-button--ghost"');
     expect(markup).toContain('aria-pressed="true"');
+    expect(markup).toContain("disabled");
     expect(markup).toContain("Sound on");
   });
 });
@@ -45,6 +47,7 @@ describe("createGameShellMarkup", () => {
     // Arrange
     const options = {
       boardColumns: 9,
+      canUndo: false,
       levelName: "Prototype 01",
       moves: "0",
       socketCount: "2",
@@ -59,8 +62,10 @@ describe("createGameShellMarkup", () => {
     expect(markup).toContain("data-board");
     expect(markup).toContain("data-moves");
     expect(markup).toContain("data-reset");
+    expect(markup).toContain("data-undo");
     expect(markup).toContain("data-sound");
     expect(markup).toContain("data-status");
+    expect(markup).toContain("Undo with Z. Reset with R.");
     expect(markup).toContain("grid-template-columns: repeat(9, minmax(0, 1fr));");
   });
 });

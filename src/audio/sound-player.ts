@@ -177,6 +177,26 @@ export const createSoundPlan = (step: StepResult): SoundAction[] => {
         type: "triangle",
       });
       break;
+    case "undo":
+      plan.push(
+        {
+          at: 0,
+          duration: 0.07,
+          frequency: 280,
+          gain: 0.018,
+          kind: "tone",
+          type: "triangle",
+        },
+        {
+          at: 0.045,
+          duration: 0.07,
+          frequency: 220,
+          gain: 0.014,
+          kind: "tone",
+          type: "triangle",
+        },
+      );
+      break;
     case "win":
       plan.push(
         {
