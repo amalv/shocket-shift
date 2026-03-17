@@ -3,6 +3,7 @@
 
 ## Related issue
 - Closes #
+- Match the pull request label(s) to the linked issue when the same category applies.
 
 ## Type of change
 - [ ] `feat`

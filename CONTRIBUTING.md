@@ -4,6 +4,7 @@
 - Track work through GitHub issues.
 - Create one focused branch per issue.
 - Open a pull request linked to the issue with `Closes #<issue-number>` when applicable.
+- Apply the closest existing repository label to the issue and mirror that label on the pull request when it still fits.
 - Keep pull requests small enough to review comfortably.
 
 ## Branch naming

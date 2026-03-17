@@ -92,7 +92,7 @@ Useful docs:
 ## 🚀 Quick Start
 ### Requirements
 - Bun
-- Node.js
+- Node.js `20.19+` or `22.12+`
 
 ### Run locally
 ```bash
