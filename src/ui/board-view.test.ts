@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { prototypeLevel } from "../src/game/levels";
+import { prototypeLevel } from "../game/levels";
+import type { StepResult } from "../game/types";
 import {
   buildBoardSnapshot,
   createGoalActivationEffects,
   createPlayerCelebrationEffects,
   getChargeOrigin,
-} from "../src/ui/board-view";
+} from "./board-view";
 
 describe("buildBoardSnapshot", () => {
   it("projects player and cells onto the level grid", () => {
-    // Arrange
     const state = {
       cells: [
         { x: 3, y: 1 },
@@ -21,10 +21,8 @@ describe("buildBoardSnapshot", () => {
       won: false,
     };
 
-    // Act
     const snapshot = buildBoardSnapshot(prototypeLevel, state);
 
-    // Assert
     expect(snapshot[1]?.[3]).toMatchObject({
       hasCell: true,
       isCharged: true,
@@ -43,24 +41,20 @@ describe("buildBoardSnapshot", () => {
 
 describe("getChargeOrigin", () => {
   it("returns the source side relative to the powered socket", () => {
-    // Arrange
     const delta = {
       from: { x: 4, y: 3 },
       to: { x: 5, y: 3 },
     };
 
-    // Act
     const origin = getChargeOrigin(delta);
 
-    // Assert
     expect(origin).toBe("left");
   });
 });
 
 describe("createGoalActivationEffects", () => {
   it("maps activated goals to directional charge metadata", () => {
-    // Arrange
-    const step = {
+    const step: StepResult = {
       activatedGoals: [{ x: 3, y: 1 }],
       event: "push",
       playerDelta: {
@@ -77,12 +71,10 @@ describe("createGoalActivationEffects", () => {
         player: { x: 4, y: 1 },
         won: false,
       },
-    } as const;
+    };
 
-    // Act
     const effects = createGoalActivationEffects(step);
 
-    // Assert
     expect(effects).toEqual([
       {
         origin: "right",
@@ -94,8 +86,7 @@ describe("createGoalActivationEffects", () => {
 
 describe("createPlayerCelebrationEffects", () => {
   it("celebrates at the drone's current tile when a socket powers on", () => {
-    // Arrange
-    const step = {
+    const step: StepResult = {
       activatedGoals: [{ x: 5, y: 7 }],
       event: "push",
       playerDelta: {
@@ -112,12 +103,10 @@ describe("createPlayerCelebrationEffects", () => {
         player: { x: 4, y: 4 },
         won: false,
       },
-    } as const;
+    };
 
-    // Act
     const effects = createPlayerCelebrationEffects(step);
 
-    // Assert
     expect(effects).toEqual([{ point: { x: 4, y: 4 } }]);
   });
 });

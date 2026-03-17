@@ -61,7 +61,7 @@ The codebase stays intentionally modular:
 - `src/game/`: puzzle rules, state transitions, level parsing, and domain types
 - `src/ui/`: DOM rendering and board-view effects
 - `src/audio/`: procedural sound planning and playback
-- `tests/`: focused unit coverage around engine, parsing, board projection, and audio planning
+- unit tests live alongside the modules they cover inside `src/`
 
 Current architecture goals:
 - keep the engine deterministic and easy to test
@@ -92,7 +92,7 @@ Useful docs:
 ## 🚀 Quick Start
 ### Requirements
 - Bun
-- Node.js
+- Node.js `20.19+` or `22.12+`
 
 ### Run locally
 ```bash

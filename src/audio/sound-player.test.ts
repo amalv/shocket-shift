@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { createSoundPlan } from "../src/audio/sound-player";
-import type { StepResult } from "../src/game/types";
+import type { StepResult } from "../game/types";
+import { createSoundPlan } from "./sound-player";
 
 const createStepResult = (overrides: Partial<StepResult>): StepResult => {
   return {
@@ -21,13 +21,9 @@ const createStepResult = (overrides: Partial<StepResult>): StepResult => {
 
 describe("createSoundPlan", () => {
   it("creates a compact tone for a normal move", () => {
-    // Arrange
     const step = createStepResult({ event: "move" });
-
-    // Act
     const plan = createSoundPlan(step);
 
-    // Assert
     expect(plan).toHaveLength(1);
     expect(plan[0]).toMatchObject({
       kind: "tone",
@@ -36,16 +32,12 @@ describe("createSoundPlan", () => {
   });
 
   it("builds a progressive charge-up and happy finish when a socket powers on", () => {
-    // Arrange
     const step = createStepResult({
       activatedGoals: [{ x: 3, y: 1 }],
       event: "push",
     });
-
-    // Act
     const plan = createSoundPlan(step);
 
-    // Assert
     expect(plan[0]).toMatchObject({
       kind: "sweep",
       fromFrequency: 220,
@@ -60,13 +52,9 @@ describe("createSoundPlan", () => {
   });
 
   it("layers a finish flourish for the win event", () => {
-    // Arrange
     const step = createStepResult({ event: "win" });
-
-    // Act
     const plan = createSoundPlan(step);
 
-    // Assert
     expect(plan[0]).toMatchObject({
       kind: "sweep",
       fromFrequency: 300,
@@ -76,13 +64,9 @@ describe("createSoundPlan", () => {
   });
 
   it("uses a short descending cue for undo", () => {
-    // Arrange
     const step = createStepResult({ event: "undo" });
-
-    // Act
     const plan = createSoundPlan(step);
 
-    // Assert
     expect(plan).toHaveLength(2);
     expect(plan[0]).toMatchObject({
       kind: "tone",
