@@ -9,12 +9,12 @@
 [![Release](https://github.com/amalv/shocket-shift/actions/workflows/release.yml/badge.svg)](https://github.com/amalv/shocket-shift/actions/workflows/release.yml)
 [![Semantic Release](https://img.shields.io/badge/Semantic_Release-494949?style=flat-square&logo=semanticrelease&logoColor=white)](https://semantic-release.gitbook.io/)
 
-Socket Shift is an original TypeScript puzzle game about guiding a maintenance drone and routing power cells into live sockets. It is intentionally small right now: one handcrafted level, sharp game feel, and a repo set up to scale cleanly instead of collapsing into prototype chaos.
+Socket Shift is an original TypeScript puzzle game about guiding a maintenance drone and routing power cells into live sockets. It is intentionally small right now: a tight three-level campaign, sharp game feel, and a repo set up to scale cleanly instead of collapsing into prototype chaos.
 
 ## ✨ Available Now
 - A playable browser prototype built with TypeScript and Vite
 - A pure puzzle engine separated from DOM rendering and audio adapters
-- One handcrafted level focused on readable movement and satisfying interactions
+- A three-level handcrafted campaign with clear level-to-level progression
 - Undo support for quick move-by-move puzzle recovery
 - Procedural sound effects with layered charge-up feedback
 - Microinteractions for movement, pushes, socket surges, and power-on effects
@@ -140,7 +140,7 @@ Preview and production deployments are handled through Vercel's GitHub integrati
 - semantic-release
 
 ## 🎯 Current Product Direction
-Socket Shift is heading toward a production-ready web game in small, reviewable steps. The near-term focus is to strengthen the public-facing docs, add CI and deployment, and then continue expanding the game with progression, undo, and richer polish.
+Socket Shift is heading toward a production-ready web game in small, reviewable steps. The current focus is to deepen the feel of play with better onboarding, accessibility work, and richer motion and sound polish on top of the new campaign flow.
 
 ## 🤝 Workflow
 - Track work through GitHub issues

@@ -31,7 +31,7 @@ const meta = {
     label: { control: "text" },
   },
   args: {
-    label: "Reset level",
+    label: "Reset",
     onClick: fn(),
     tone: "primary",
   },
@@ -55,14 +55,16 @@ export const Ghost: Story = {
   args: {
     label: "Sound on",
     tone: "ghost",
+    visualLabel: "SFX",
   },
 };
 
 export const SoundEnabled: Story = {
   args: {
     ariaPressed: true,
-    label: "Sound enabled",
+    label: "Sound on",
     tone: "ghost",
+    visualLabel: "SFX",
   },
   parameters: {
     docs: {

@@ -3,9 +3,8 @@ import type { GameState, Level, StepResult } from "../game/types";
 import { createBoardView } from "./board-view";
 
 type RendererOptions = {
-  level: Level;
+  onPrimaryAction: () => void;
   onUndo: () => void;
-  onReset: () => void;
   onToggleSound: () => void;
   root: HTMLDivElement;
 };
@@ -13,6 +12,9 @@ type RendererOptions = {
 type RenderModel = {
   canUndo: boolean;
   lastStep: StepResult;
+  level: Level;
+  levelProgress: string;
+  primaryActionLabel: string;
   soundEnabled: boolean;
   state: GameState;
   statusMessage: string;
@@ -23,42 +25,97 @@ type AppRenderer = {
 };
 
 export function createAppRenderer(options: RendererOptions): AppRenderer {
-  options.root.innerHTML = createGameShellMarkup({
-    boardColumns: options.level.width,
-    canUndo: false,
-    levelName: options.level.name,
-    moves: "0",
-    socketCount: String(options.level.goals.length),
-    soundEnabled: true,
-    statusMessage: "",
-  });
+  let activeLevelId: string | null = null;
+  let boardView: ReturnType<typeof createBoardView> | null = null;
+  let shellRefs: {
+    levelProgress: HTMLElement;
+    moves: HTMLElement;
+    primaryActionButton: HTMLButtonElement;
+    socketCount: HTMLElement;
+    soundButton: HTMLButtonElement;
+    status: HTMLDivElement;
+    undoButton: HTMLButtonElement;
+  } | null = null;
 
-  const board = options.root.querySelector<HTMLDivElement>("[data-board]");
-  const moves = options.root.querySelector<HTMLElement>("[data-moves]");
-  const status = options.root.querySelector<HTMLDivElement>("[data-status]");
-  const resetButton = options.root.querySelector<HTMLButtonElement>("[data-reset]");
-  const undoButton = options.root.querySelector<HTMLButtonElement>("[data-undo]");
-  const soundButton = options.root.querySelector<HTMLButtonElement>("[data-sound]");
+  const mountShell = (model: RenderModel): void => {
+    options.root.innerHTML = createGameShellMarkup({
+      boardColumns: model.level.width,
+      canUndo: model.canUndo,
+      levelName: model.level.name,
+      levelProgress: model.levelProgress,
+      moves: String(model.state.moves),
+      primaryActionLabel: model.primaryActionLabel,
+      socketCount: String(model.level.goals.length),
+      soundEnabled: model.soundEnabled,
+      statusMessage: model.statusMessage,
+      won: model.state.won,
+    });
 
-  if (!board || !moves || !status || !resetButton || !undoButton || !soundButton) {
-    throw new Error("Renderer setup failed");
-  }
+    const board = options.root.querySelector<HTMLDivElement>("[data-board]");
+    const levelProgress = options.root.querySelector<HTMLElement>("[data-level-progress]");
+    const moves = options.root.querySelector<HTMLElement>("[data-moves]");
+    const primaryActionButton =
+      options.root.querySelector<HTMLButtonElement>("[data-primary-action]");
+    const socketCount = options.root.querySelector<HTMLElement>("[data-socket-count]");
+    const status = options.root.querySelector<HTMLDivElement>("[data-status]");
+    const undoButton = options.root.querySelector<HTMLButtonElement>("[data-undo]");
+    const soundButton = options.root.querySelector<HTMLButtonElement>("[data-sound]");
 
-  const boardView = createBoardView(board, options.level);
+    if (
+      !board ||
+      !levelProgress ||
+      !moves ||
+      !primaryActionButton ||
+      !socketCount ||
+      !status ||
+      !undoButton ||
+      !soundButton
+    ) {
+      throw new Error("Renderer setup failed");
+    }
 
-  resetButton.addEventListener("click", options.onReset);
-  undoButton.addEventListener("click", options.onUndo);
-  soundButton.addEventListener("click", options.onToggleSound);
+    primaryActionButton.addEventListener("click", options.onPrimaryAction);
+    undoButton.addEventListener("click", options.onUndo);
+    soundButton.addEventListener("click", options.onToggleSound);
+
+    boardView = createBoardView(board, model.level);
+    activeLevelId = model.level.id;
+    shellRefs = {
+      levelProgress,
+      moves,
+      primaryActionButton,
+      socketCount,
+      soundButton,
+      status,
+      undoButton,
+    };
+  };
 
   return {
     render(model) {
-      moves.textContent = String(model.state.moves);
-      status.textContent = model.statusMessage;
-      status.classList.toggle("won", model.state.won);
-      status.classList.toggle("status-banner--won", model.state.won);
-      undoButton.disabled = !model.canUndo;
-      soundButton.textContent = model.soundEnabled ? "Sound on" : "Sound off";
-      soundButton.setAttribute("aria-pressed", String(model.soundEnabled));
+      if (!shellRefs || !boardView || activeLevelId !== model.level.id) {
+        mountShell(model);
+      }
+
+      if (!shellRefs || !boardView) {
+        throw new Error("Renderer setup failed");
+      }
+
+      shellRefs.levelProgress.textContent = model.levelProgress;
+      shellRefs.moves.textContent = String(model.state.moves);
+      shellRefs.socketCount.textContent = String(model.level.goals.length);
+      shellRefs.status.textContent = model.statusMessage;
+      shellRefs.status.classList.toggle("won", model.state.won);
+      shellRefs.status.classList.toggle("status-banner--won", model.state.won);
+      shellRefs.primaryActionButton.textContent = model.primaryActionLabel;
+      shellRefs.undoButton.disabled = !model.canUndo;
+      shellRefs.soundButton.textContent = "SFX";
+      shellRefs.soundButton.setAttribute("aria-pressed", String(model.soundEnabled));
+      shellRefs.soundButton.setAttribute(
+        "aria-label",
+        model.soundEnabled ? "Sound on" : "Sound off",
+      );
+      shellRefs.soundButton.setAttribute("title", model.soundEnabled ? "Sound on" : "Sound off");
       boardView.render(model.state, model.lastStep);
     },
   };

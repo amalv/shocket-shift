@@ -16,7 +16,9 @@ const meta = {
     boardColumns: 9,
     canUndo: false,
     levelName: "Prototype 01",
+    levelProgress: "1 / 3",
     moves: "0",
+    primaryActionLabel: "Reset",
     socketCount: "2",
     soundEnabled: true,
     statusMessage: "Level reset. Systems ready.",
@@ -43,8 +45,9 @@ export const WonState: Story = {
   args: {
     canUndo: true,
     moves: "24",
+    primaryActionLabel: "Reset",
     soundEnabled: false,
-    statusMessage: "Grid stable. All sockets are powered.",
+    statusMessage: "Grid stable. Routing the next sector.",
     won: true,
   },
 };

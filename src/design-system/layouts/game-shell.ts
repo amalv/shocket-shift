@@ -9,7 +9,9 @@ export type GameShellMarkupOptions = {
   boardColumns: number;
   canUndo: boolean;
   levelName: string;
+  levelProgress: string;
   moves: string;
+  primaryActionLabel: string;
   socketCount: string;
   soundEnabled: boolean;
   statusMessage: string;
@@ -21,7 +23,9 @@ export const createGameShellMarkup = ({
   boardColumns,
   canUndo,
   levelName,
+  levelProgress,
   moves,
+  primaryActionLabel,
   socketCount,
   soundEnabled,
   statusMessage,
@@ -37,13 +41,26 @@ export const createGameShellMarkup = ({
         </p>
         <div class="stats">
           ${createStatCardMarkup({ label: "Moves", value: moves, valueAttributes: "data-moves" })}
-          ${createStatCardMarkup({ label: "Sockets", value: socketCount })}
+          ${createStatCardMarkup({
+            label: "Sector",
+            value: levelProgress,
+            valueAttributes: "data-level-progress",
+          })}
+          ${createStatCardMarkup({
+            label: "Sockets",
+            value: socketCount,
+            valueAttributes: "data-socket-count",
+          })}
         </div>
         <div class="actions">
-          ${createControlButtonMarkup({ label: "Reset level", dataAttribute: "data-reset" })}
+          ${createControlButtonMarkup({
+            label: primaryActionLabel,
+            tone: "primary",
+            dataAttribute: "data-primary-action",
+          })}
           ${createControlButtonMarkup({
             disabled: !canUndo,
-            label: "Undo move",
+            label: "Undo",
             tone: "ghost",
             dataAttribute: "data-undo",
           })}
@@ -52,9 +69,10 @@ export const createGameShellMarkup = ({
             label: soundEnabled ? "Sound on" : "Sound off",
             tone: "ghost",
             dataAttribute: "data-sound",
+            visualLabel: "SFX",
           })}
         </div>
-        <p class="hint">Move with arrow keys or WASD. Undo with Z. Reset with R.</p>
+        <p class="hint">Move with arrows or WASD. Z undo. R reset. N new run.</p>
       </section>
       <section class="panel board-panel">
         ${createBoardSurfaceMarkup({
