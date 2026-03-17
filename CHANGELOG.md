@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/amalv/shocket-shift/compare/v1.2.0...v1.3.0) (2026-03-17)
+
+
+### Features
+
+* add undo move history ([6c3567c](https://github.com/amalv/shocket-shift/commit/6c3567ca39ef5dc81a5f284e5c76e971fd9cb2c9))
+
 # [1.2.0](https://github.com/amalv/shocket-shift/compare/v1.1.0...v1.2.0) (2026-03-16)
 
 
