@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/amalv/shocket-shift/compare/v1.4.0...v1.5.0) (2026-03-17)
+
+
+### Features
+
+* improve shell onboarding and accessibility ([3fd022e](https://github.com/amalv/shocket-shift/commit/3fd022e34a264542ac2ade6c9b96ec3f6e84762b))
+
 # [1.4.0](https://github.com/amalv/shocket-shift/compare/v1.3.0...v1.4.0) (2026-03-17)
 
 
