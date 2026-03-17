@@ -46,7 +46,7 @@ Delivered:
 - Semantic-release flow verified on `main`
 
 ## 🔵 Milestone 04: Core Game Growth
-Status: planned
+Status: complete
 
 Goals:
 - Add undo and move history
@@ -54,7 +54,7 @@ Goals:
 - Establish the first Storybook-backed design-system layer
 - Improve win/reset flow and in-game status feedback
 
-Deliverables:
+Delivered:
 - Undo support
 - Level registry and progression system
 - Better state transitions around reset and completion

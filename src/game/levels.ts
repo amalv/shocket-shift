@@ -15,3 +15,41 @@ export const prototypeLevel = parseLevel({
     "#########",
   ],
 });
+
+export const crossCurrentLevel = parseLevel({
+  id: "cross-current",
+  name: "Cross Current",
+  rows: [
+    "###########",
+    "#..G......#",
+    "#.###.###.#",
+    "#.C.C..#..#",
+    "#.#.#..#..#",
+    "#.........#",
+    "#..#..#.#.#",
+    "#..##....G#",
+    "#.###.###.#",
+    "#........P#",
+    "###########",
+  ],
+});
+
+export const relaySpineLevel = parseLevel({
+  id: "relay-spine",
+  name: "Relay Spine",
+  rows: [
+    "###########",
+    "#..G......#",
+    "#.###.###.#",
+    "#......#.C#",
+    "#.#C#.##..#",
+    "#.........#",
+    "#.C##.#.#.#",
+    "#..#....PG#",
+    "#.###.###.#",
+    "#..G......#",
+    "###########",
+  ],
+});
+
+export const campaignLevels = [prototypeLevel, crossCurrentLevel, relaySpineLevel];

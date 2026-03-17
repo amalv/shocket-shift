@@ -12,6 +12,7 @@ describe("createControlButtonMarkup", () => {
       disabled: true,
       label: "Sound on",
       tone: "ghost",
+      visualLabel: "SFX",
     } as const;
 
     // Act
@@ -20,8 +21,9 @@ describe("createControlButtonMarkup", () => {
     // Assert
     expect(markup).toContain('class="control-button control-button--ghost"');
     expect(markup).toContain('aria-pressed="true"');
+    expect(markup).toContain('aria-label="Sound on"');
     expect(markup).toContain("disabled");
-    expect(markup).toContain("Sound on");
+    expect(markup).toContain(">SFX<");
   });
 });
 
@@ -49,7 +51,9 @@ describe("createGameShellMarkup", () => {
       boardColumns: 9,
       canUndo: false,
       levelName: "Prototype 01",
+      levelProgress: "1 / 3",
       moves: "0",
+      primaryActionLabel: "Reset",
       socketCount: "2",
       soundEnabled: true,
       statusMessage: "Level reset. Systems ready.",
@@ -60,12 +64,13 @@ describe("createGameShellMarkup", () => {
 
     // Assert
     expect(markup).toContain("data-board");
+    expect(markup).toContain("data-level-progress");
     expect(markup).toContain("data-moves");
-    expect(markup).toContain("data-reset");
+    expect(markup).toContain("data-primary-action");
     expect(markup).toContain("data-undo");
     expect(markup).toContain("data-sound");
     expect(markup).toContain("data-status");
-    expect(markup).toContain("Undo with Z. Reset with R.");
+    expect(markup).toContain("Z undo. R reset. N new run.");
     expect(markup).toContain("grid-template-columns: repeat(9, minmax(0, 1fr));");
   });
 });

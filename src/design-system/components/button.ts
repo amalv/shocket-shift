@@ -8,6 +8,7 @@ export type ControlButtonMarkupOptions = {
   disabled?: boolean;
   label: string;
   tone?: ControlButtonTone;
+  visualLabel?: string;
 };
 
 export const createControlButtonMarkup = ({
@@ -16,6 +17,7 @@ export const createControlButtonMarkup = ({
   disabled = false,
   label,
   tone = "primary",
+  visualLabel,
 }: ControlButtonMarkupOptions): string => {
   const attributes = ['type="button"', `class="control-button control-button--${tone}"`];
 
@@ -27,9 +29,14 @@ export const createControlButtonMarkup = ({
     attributes.push(`aria-pressed="${String(ariaPressed)}"`);
   }
 
+  if (visualLabel && visualLabel !== label) {
+    attributes.push(`aria-label="${escapeHtml(label)}"`);
+    attributes.push(`title="${escapeHtml(label)}"`);
+  }
+
   if (disabled) {
     attributes.push("disabled");
   }
 
-  return `<button ${attributes.join(" ")}>${escapeHtml(label)}</button>`;
+  return `<button ${attributes.join(" ")}>${escapeHtml(visualLabel ?? label)}</button>`;
 };
