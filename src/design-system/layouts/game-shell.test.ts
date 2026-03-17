@@ -25,7 +25,14 @@ describe("createGameShellMarkup", () => {
     expect(markup).toContain("data-undo");
     expect(markup).toContain("data-sound");
     expect(markup).toContain("data-status");
-    expect(markup).toContain("Z undo. R reset. N new run.");
+    expect(markup).toContain("Mission");
+    expect(markup).toContain("Controls");
+    expect(markup).toContain("Route every power cell into a live socket to stabilize the grid.");
+    expect(markup).toContain('<kbd class="keycap">Z</kbd>');
+    expect(markup).toContain('<kbd class="keycap keycap--wide">Arrows</kbd>');
+    expect(markup).toContain('id="game-board-help"');
+    expect(markup).toContain('aria-describedby="game-board-help game-status"');
+    expect(markup).toContain('id="game-status"');
     expect(markup).toContain("grid-template-columns: repeat(9, minmax(0, 1fr));");
   });
 });

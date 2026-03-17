@@ -39,6 +39,47 @@ export const createGameShellMarkup = ({
         <p class="lede">
           Guide the maintenance drone and push every power cell into a live socket.
         </p>
+        <div class="briefing" aria-label="Mission and controls">
+          <div class="brief-card">
+            <p class="label">Mission</p>
+            <p class="brief-copy">Route every power cell into a live socket to stabilize the grid.</p>
+          </div>
+          <div class="brief-card brief-card--controls">
+            <p class="label">Controls</p>
+            <dl class="control-list">
+              <div class="control-row">
+                <dt class="control-action">Move</dt>
+                <dd class="control-keys">
+                  <kbd class="keycap keycap--wide">Arrows</kbd>
+                  <span class="control-separator" aria-hidden="true">/</span>
+                  <kbd class="keycap keycap--wide">WASD</kbd>
+                </dd>
+              </div>
+              <div class="control-row">
+                <dt class="control-action">Undo</dt>
+                <dd class="control-keys">
+                  <kbd class="keycap">Z</kbd>
+                </dd>
+              </div>
+              <div class="control-row">
+                <dt class="control-action">Reset</dt>
+                <dd class="control-keys">
+                  <kbd class="keycap">R</kbd>
+                </dd>
+              </div>
+              <div class="control-row">
+                <dt class="control-action">New run</dt>
+                <dd class="control-keys">
+                  <kbd class="keycap">N</kbd>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <p class="sr-only" id="game-board-help">
+          Guide the drone with the arrow keys or WASD, push every power cell into a live socket,
+          and listen for status updates after each move.
+        </p>
         <div class="stats">
           ${createStatCardMarkup({ label: "Moves", value: moves, valueAttributes: "data-moves" })}
           ${createStatCardMarkup({
@@ -72,16 +113,17 @@ export const createGameShellMarkup = ({
             visualLabel: "SFX",
           })}
         </div>
-        <p class="hint">Move with arrows or WASD. Z undo. R reset. N new run.</p>
       </section>
       <section class="panel board-panel">
         ${createBoardSurfaceMarkup({
+          ariaDescribedBy: "game-board-help game-status",
           ariaLabel: boardAriaLabel,
           columns: boardColumns,
           dataAttribute: "data-board",
         })}
         ${createStatusBannerMarkup({
           dataAttribute: "data-status",
+          id: "game-status",
           message: statusMessage,
           tone: won ? "won" : "default",
         })}
