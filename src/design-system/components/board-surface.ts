@@ -1,12 +1,14 @@
 import { escapeHtml } from "../shared/escape-html";
 
 export type BoardSurfaceMarkupOptions = {
+  ariaDescribedBy?: string;
   ariaLabel?: string;
   columns: number;
   dataAttribute?: string;
 };
 
 export const createBoardSurfaceMarkup = ({
+  ariaDescribedBy,
   ariaLabel = "Puzzle grid",
   columns,
   dataAttribute,
@@ -17,6 +19,10 @@ export const createBoardSurfaceMarkup = ({
     'role="img"',
     `aria-label="${escapeHtml(ariaLabel)}"`,
   ];
+
+  if (ariaDescribedBy) {
+    attributes.push(`aria-describedby="${escapeHtml(ariaDescribedBy)}"`);
+  }
 
   if (dataAttribute) {
     attributes.push(dataAttribute);

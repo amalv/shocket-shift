@@ -11,6 +11,12 @@
 
 Socket Shift is an original TypeScript puzzle game about guiding a maintenance drone and routing power cells into live sockets. It is intentionally small right now: a tight three-level campaign, sharp game feel, and a repo set up to scale cleanly instead of collapsing into prototype chaos.
 
+## Preview
+<p align="center">
+  <img src="./docs/images/socket-shift-desktop.png" alt="Socket Shift desktop gameplay shell" width="68%" />
+  <img src="./docs/images/socket-shift-mobile.png" alt="Socket Shift mobile gameplay shell" width="22%" />
+</p>
+
 ## ✨ Available Now
 - A playable browser prototype built with TypeScript and Vite
 - A pure puzzle engine separated from DOM rendering and audio adapters

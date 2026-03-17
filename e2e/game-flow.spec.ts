@@ -137,15 +137,43 @@ test("auto-loads the next level after a win", async ({ page }) => {
   await expectCellAt(page, 4, 3);
 });
 
-test("keeps the desktop shell within one viewport without vertical scrolling", async ({ page }) => {
-  await page.setViewportSize({ width: 1366, height: 768 });
-  await page.goto("/");
+test("keeps the desktop shell within one viewport without horizontal or vertical scrolling", async ({
+  page,
+}) => {
+  for (const viewport of [
+    { width: 1280, height: 720 },
+    { width: 1366, height: 768 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
 
-  const hasVerticalOverflow = await page.evaluate(() => {
-    return document.documentElement.scrollHeight > window.innerHeight;
-  });
+    const overflow = await page.evaluate(() => {
+      return {
+        horizontal: document.documentElement.scrollWidth > window.innerWidth,
+        vertical: document.documentElement.scrollHeight > window.innerHeight,
+      };
+    });
 
-  expect(hasVerticalOverflow).toBe(false);
+    expect(overflow.horizontal).toBe(false);
+    expect(overflow.vertical).toBe(false);
+  }
+});
+
+test("exposes onboarding copy and live status semantics without expanding the shell", async ({
+  page,
+}) => {
+  const board = page.locator("[data-board]");
+  const status = page.locator("[data-status]");
+
+  await expect(page.getByText("Mission")).toBeVisible();
+  await expect(page.getByText("Controls")).toBeVisible();
+  await expect(
+    page.getByText("Route every power cell into a live socket to stabilize the grid."),
+  ).toBeVisible();
+  await expect(status).toHaveAttribute("role", "status");
+  await expect(status).toHaveAttribute("aria-live", "polite");
+  await expect(status).toHaveAttribute("aria-atomic", "true");
+  await expect(board).toHaveAttribute("aria-describedby", "game-board-help game-status");
 });
 
 test("offers a new game restart after the full campaign is cleared", async ({ page }) => {
