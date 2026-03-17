@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/amalv/shocket-shift/compare/v1.3.0...v1.4.0) (2026-03-17)
+
+
+### Features
+
+* add campaign progression and restart flow ([edfd945](https://github.com/amalv/shocket-shift/commit/edfd9459b9eba2f06b87f783cbfdb4b8db0b8593))
+
 # [1.3.0](https://github.com/amalv/shocket-shift/compare/v1.2.0...v1.3.0) (2026-03-17)
 
 
